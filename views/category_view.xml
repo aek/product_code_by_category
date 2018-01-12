@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 
     <record id="auto_code_product_category_view" model="ir.ui.view">
         <field name="name">auto.code.product.category.form.view</field>
@@ -28,5 +27,4 @@
         </field>
     </record>
 
-</data>
-</openerp>
+</odoo>

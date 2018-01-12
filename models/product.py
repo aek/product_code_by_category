@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # © 2016 Apulia Software S.r.l. (<info@apuliasoftware.it>)
+# © 2018 Apulia Software S.r.l. (<info@apuliasoftware.it>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 
-from openerp import models, fields, api, _, SUPERUSER_ID
+from odoo import models, fields, api, _, SUPERUSER_ID
 import re
 from openerp.exceptions import Warning as UserError
 
@@ -21,7 +22,7 @@ class ProductCategory(models.Model):
     def create_sequence(self, record):
         # Create new no_gap entry sequence for every new category
         name = record.name_get()[0][1]
-        sequence_code = self.env['ir.sequence.type'].search(
+        sequence_code = self.env['ir.sequence'].search(
             [('code', '=', 'base.product.auto.sequence')]) or ''
         if sequence_code:
             sequence_code = sequence_code.code
@@ -87,7 +88,7 @@ class ProductCategory(models.Model):
                     limit=100):
         name = re.sub(r"\[\w+\] ", "", name)
         res = super(ProductCategory, self).name_search(
-            name, args, operator, limit=limit, context=context)
+            name, args, operator, limit=limit)
         if not name:
             return res
         list_id = []
@@ -104,19 +105,19 @@ class ProductCategory(models.Model):
         return res
 
     def get_product_sequence(self):
-        category = self
         code = ''
         # ----- Valid only for categories with active sequence
-        if category.use_sequence and category.sequence_id:
-            sequence_model = self.env['ir.sequence']
+        if self.use_sequence and self.sequence_id:
+            sequence_model = self.env['ir.sequence'].browse(self.sequence_id.id)
             code = '{prefix_code}{sequence}'
             code = code.format(
-                prefix_code=category.prefix_code,
-                sequence=sequence_model.next_by_id(category.sequence_id.id))
+                prefix_code=self.prefix_code,
+                sequence=sequence_model.next_by_id())
         return code
 
     def update_cat_seq_name(self, cat, seq):
         seq.name = cat.name_get()[0][1]
+
 
 class ProductProduct(models.Model):
 
