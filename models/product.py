@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 # © 2016 Apulia Software S.r.l. (<info@apuliasoftware.it>)
-# © 2018 Apulia Software S.r.l. (<info@apuliasoftware.it>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 
@@ -74,9 +72,10 @@ class ProductCategory(models.Model):
 
         return [(cat.id, " / ".join(reversed(get_names(cat)))) for cat in self]
 
-    @api.one
+    @api.multi
     @api.depends('code', 'parent_id', 'parent_id.code')
     def _prefix_code(self):
+        self.ensure_one()
         code = self.code or ''
         if self.parent_id:
             parent_code = self.parent_id.prefix_code or ''
