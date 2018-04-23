@@ -13,7 +13,6 @@
         'account',
     ],
     'data': [
-        'data/sequence.xml',
         'views/product_view.xml',
         'views/category_view.xml',
         'wizard/update_code.xml',

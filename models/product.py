@@ -20,16 +20,11 @@ class ProductCategory(models.Model):
     def create_sequence(self, record):
         # Create new no_gap entry sequence for every new category
         name = record.name_get()[0][1]
-        sequence_code = self.env['ir.sequence'].search(
-            [('code', '=', 'base.product.auto.sequence')]) or ''
-        if sequence_code:
-            sequence_code = sequence_code.code
         seq = {
             'name': name,
             'implementation': 'no_gap',
             'padding': 4,
-            'number_increment': 1,
-            'code': sequence_code,
+            'number_increment': 1
         }
         return self.env['ir.sequence'].create(seq)
 
