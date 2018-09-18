@@ -70,12 +70,12 @@ class ProductCategory(models.Model):
     @api.multi
     @api.depends('code', 'parent_id', 'parent_id.code')
     def _prefix_code(self):
-        self.ensure_one()
-        code = self.code or ''
-        if self.parent_id:
-            parent_code = self.parent_id.prefix_code or ''
-            code = '%s%s' % (parent_code, code)
-        self.prefix_code = code
+        for prod in self:
+            code = prod.code or ''
+            if prod.parent_id:
+                parent_code = prod.parent_id.prefix_code or ''
+                code = '%s%s' % (parent_code, code)
+            prod.prefix_code = code
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', context=None,
